@@ -1,0 +1,103 @@
+.login-container-wrapper {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    /* background-color: antiquewhite; */
+
+}
+
+.logincontainer {
+    width: 350px;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    padding: 50px 0px;
+    /* border: 2px solid black; */
+    margin: 0 0 10px;
+    /* background-color: aqua; */
+    border-radius: 10px;
+    background-color: white;
+    font-family: sans-serif;
+    box-shadow: 0px 0px 35px rgba(0, 0, 0, 0.2);
+}
+
+.formcontainer {
+    display: flex;
+    justify-content: space-evenly;
+    align-items: center;
+    flex-direction: column;
+    width: 250px;
+}
+
+.login-heading {
+    padding: 5px;
+    font-size: 1.5rem;
+    color: gray;
+}
+
+.fields {
+    padding: 10px 0;
+    display: flex;
+    flex-direction: column;
+    align-items: start;
+    /* border: 1px dashed red; */
+    width: 100%;
+}
+
+.login-submit {
+    min-width: 100%;
+}
+
+#input {
+    min-width: 100%;
+    padding: 10px;
+    border: none;
+    border-bottom: 2px solid #f2f2f2;
+}
+
+#btn {
+    min-width: 100%;
+    background-color: #417AFF;
+    text-align: center;
+    padding: 10px;
+    border-radius: 5px;
+    border: none;
+    color: white;
+    margin-top: 20px;
+
+}
+
+#forgotpwd {
+    color: #417AFF;
+    text-align: right;
+    margin-left: 60%;
+}
+
+.whole-container {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    height: 100vh;
+    flex-direction: column;
+    background-color: #F3F4F9;
+}
+
+.foxLogo {
+    height: 100px;
+}
+
+.logo-heading {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    margin-bottom: 20px;
+
+}
+
+#fox-ai-heading {
+    padding-right: 10px;
+}
+
+.field-labels {
+    color: grey;
+}

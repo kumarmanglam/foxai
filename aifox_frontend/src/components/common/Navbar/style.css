@@ -1,0 +1,59 @@
+.entireLayout {
+    display: flex;
+    align-items: flex-start;
+    justify-content: space-between;
+    /* border: 1px solid black; */
+    padding: 10px 15px;
+    border-radius: 5px;
+
+}
+
+.navLogo {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+}
+
+.home-logout {
+    display: flex;
+    justify-content: space-between;
+    align-items: flex-start;
+    margin: 0%;
+    /* border: 1px solid aqua; */
+    padding: 5px;
+}
+
+.actionButton {
+    padding: 6px 20px;
+    margin-right: 10px;
+    border-radius: 15px;
+    cursor: pointer;
+    font-weight: 600;
+    font-size: 0.75rem;
+}
+
+#navHomeButton {
+    background-color: #1d1d1d;
+    color: white;
+}
+
+#navLogoutButton {
+    background-color: white;
+    border: 0.5px solid #7D7D7D;
+    color: #1d1d1d
+}
+
+#fox-ai-logo {
+    width: 40px;
+    height: 40px;
+}
+
+#fox-ai-heading {
+    font-family: sans-serif;
+    font-size: 1.5rem;
+    line-height: 1.75rem;
+    color: #ED9620;
+    font-weight: 600;
+    letter-spacing: -2px;
+    cursor: pointer;
+}
