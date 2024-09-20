@@ -1,8 +1,10 @@
+const express =require(express);
 import express from "express";
 import dotenv from "dotenv";
 import cors from "cors";
 import mongoose from "mongoose";
 import authRoutes from "./routes/authRoutes.js";
+const documentsRoutes = require("./routes/documentsRoutes.js");
 dotenv.config(); 
 mongoose.connect("mongodb://localhost:27017/").then(()=>console.log("DB Connected")).catch((err)=>console.log(err));
 
@@ -15,7 +17,7 @@ app.use(express.json());
 
 app.use("/auth", authRoutes);
 // app.use("/conversation",conversationRoutes);
-// app.use("/documents", documentsRoutes);
+app.use("/documents", documentsRoutes);
 
 app.get("/", (req, res) => {
   res.status(200).json({
