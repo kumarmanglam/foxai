@@ -6,7 +6,7 @@ import mongoose from "mongoose";
 import authRoutes from "./routes/authRoutes.js";
 const documentsRoutes = require("./routes/documentsRoutes.js");
 dotenv.config(); 
-mongoose.connect("mongodb://localhost:27017/").then(()=>console.log("DB Connected")).catch((err)=>console.log(err));
+mongoose.connect("mongodb+srv://akanksharpal:Akanksha24@cluster0.coiil.mongodb.net/").then(()=>console.log("DB Connected")).catch((err)=>console.log(err));
 
 const app = express(); 
 app.use(cors());
