@@ -4,8 +4,11 @@ const pdf = require('pdf-parse');
 const axios = require('axios');
 
 require("dotenv").config();
-const hfToken = process.env.HF_TOKEN;
-const embeddingUrl = process.env.EMBEDDING_URL;
+// const hfToken = process.env.HF_TOKEN;
+// const embeddingUrl = process.env.EMBEDDING_URL;
+
+const hfToken = "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";
+const embeddingUrl = "https://api-inference.huggingface.co/pipeline/feature-extraction/sentence-transformers/all-MiniLM-L6-v2";
 
 // Extract text from PDF
 async function extractPDFText(pdfPath) {
@@ -76,7 +79,13 @@ async function saveDataToMongo(data, collection) {
                 source: item.source,
                 embeddings: embedding,
             };
-            await collection.insertOne(document);
+            console.log(embedding);
+            const result = await collection.insertOne(document);
+            if (result.acknowledged) {
+                console.log("inserted ")
+            } else {
+                console.log(("failed to insert the documents"))
+            }
             console.log(`Inserted document for chunk from ${item.source}`);
             // Delay between API calls to avoid rate limiting
             await new Promise(resolve => setTimeout(resolve, 1000));

@@ -4,11 +4,13 @@ const axios = require("axios");
 
 require("dotenv").config();
 const client = new MongoClient(process.env.MONGO_URL);
-const hfToken = process.env.HF_TOKEN;
-const embeddingUrl = process.env.EMBEDDING_URL;
-const genAI = new GoogleGenerativeAI(process.env.GOOGLE_API_KEY);
+// const hfToken = process.env.HF_TOKEN;
+// const embeddingUrl = process.env.EMBEDDING_URL;
+// const genAI = new GoogleGenerativeAI(process.env.GOOGLE_API_KEY);
+const genAI = new GoogleGenerativeAI("AIzaSyDe - o_KL1umfUHv31Ol2VPWI6iy7AfF3aM");
+const hfToken = "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";
+const embeddingUrl = "https://api-inference.huggingface.co/pipeline/feature-extraction/sentence-transformers/all-MiniLM-L6-v2";
 const model = genAI.getGenerativeModel({ model: "gemini-1.5-flash" });
-
 async function generateEmbedding(text) {
     try {
         const response = await axios.post(
@@ -47,7 +49,7 @@ async function searchWithEmbedding(embedding) {
                     index: 'default',
                     knnBeta: {
                         vector: embedding,
-                        path: 'embedding',
+                        path: 'embeddings',
                         k: 5,
                     }
                 }
@@ -77,10 +79,11 @@ async function generateAnswer(query, context) {
 
 async function retrieveAnswer(query) {
     try {
+        console.log({ query });
         const queryEmbedding = await generateEmbedding(query);
         const searchResults = await searchWithEmbedding(queryEmbedding);
         const context = searchResults.map(result => result.text);
-
+        console.log(context);
         if (context.length > 0) {
             const answer = await generateAnswer(query, context);
             return answer;
