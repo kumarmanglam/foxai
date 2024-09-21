@@ -16,7 +16,6 @@ import remarkGfm from 'remark-gfm';
 import CodeBlock from '../../common/CodeBlock';
 
 const ChatContainer = () => {
-    console.log("Jio")
     const scrollRef = useRef<HTMLDivElement>(null);
     const chatHistory = useSelector(selectChatHistory);
 

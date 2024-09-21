@@ -36,7 +36,7 @@ const InputPrompt = () => {
         event.preventDefault();
         dispatch(setChatHistory([...chatHistory, { "Human": query }]));
         setQuery("");
-        const response = await callConversationAPI(query);
+        const response = await callConversationAPI(query, chatHistory);
         // const response = "sd";
         console.log(response?.response);
         const chatEntry = {

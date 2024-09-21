@@ -7,17 +7,20 @@ import AuthenticatedComponent from '../components/common/AuthenticatedComponent'
 
 
 const RouterContainer = () => {
-    return (<Routes>
-        <Route path='/login' element={<Login />} />
-        <Route path='/' element={<Layout />} >
-            <Route path='/foxai' element={
-                <AuthenticatedComponent>
-                    <ChatContainer />
-                </AuthenticatedComponent>
-            } />
-        </Route>
-    </Routes>)
-
+    return (
+        <Routes>
+            <Route path='/login' element={<Login />} />
+            <Route path='/' element={<AuthenticatedComponent>
+                <Layout />
+            </AuthenticatedComponent>} >
+                <Route path='/foxai' element={
+                    <AuthenticatedComponent>
+                        <ChatContainer />
+                    </AuthenticatedComponent>
+                } />
+            </Route>
+        </Routes>
+    )
 }
 
 export default RouterContainer;

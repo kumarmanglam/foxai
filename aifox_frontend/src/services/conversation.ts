@@ -11,13 +11,13 @@ const fakeAPI = (): Promise<string> => {
     });
 };
 
-export const callConversationAPI = async (prompt: string): Promise<any> => {
+export const callConversationAPI = async (prompt: string, chatHistory: ChatEntry[]): Promise<any> => {
     // return { "response": "api working" };
     const url = 'http://172.16.21.248:3000/conversation/';
 
     const formData = new URLSearchParams();
     formData.append('prompt', prompt);
-    formData.append('data', JSON.stringify([{}]))
+    formData.append('data', JSON.stringify(chatHistory))
     try {
         const response = await axios.post(url, formData, {
             headers: {

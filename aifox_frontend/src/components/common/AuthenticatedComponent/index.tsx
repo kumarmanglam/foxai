@@ -8,12 +8,12 @@ interface AuthenticatedComponentProp {
 }
 const AuthenticatedComponent: React.FC<AuthenticatedComponentProp> = ({ children }) => {
     const isAuthenticated = useSelector(selectIsUserLoggedIn);
-    if (isAuthenticated) {
-        return children;
+
+    if (!isAuthenticated) {
+        return <Navigate to="/login" replace />;
     }
-    return (
-        <Navigate to="/login" />
-    )
+
+    return children;
 }
 
 export default AuthenticatedComponent;
