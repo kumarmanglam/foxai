@@ -1,12 +1,10 @@
-import React, { useEffect, useRef, useState } from 'react'
+import { useEffect, useRef, useState } from 'react'
 import "./style.css"
 import fox from "../../assets/icons/fox.png"
 import { useDispatch, useSelector } from 'react-redux'
 import { selectIsUserLoggedIn } from '../../store/selectors/userSelector'
 import { setIsUserLoggedIn } from '../../store/reducers/userSlice'
 import { useNavigate } from 'react-router-dom'
-import Navbar from '../../components/common/Navbar'
-import { set } from 'mongoose'
 export interface loginForm {
     email: string,
     password: string
