@@ -9,7 +9,7 @@ const authRoutes = require("./routes/authRoutes.js");
 const documentsRoutes = require("./routes/documentsRoutes.js");
 const conversationRoutes = require("./routes/conversationRoutes.js")
 
-mongoose.connect(process.env.MONGO_URL).then(()=>console.log("DB Connected")).catch((err)=>console.log(err));
+mongoose.connect(process.env.MONGO_URL).then(() => console.log("DB Connected")).catch((err) => console.log(err));
 
 const app = express();
 app.use(cors());
@@ -31,14 +31,10 @@ app.get("/", (req, res) => {
 
 });
 
-
 const PORT = process.env.PORT || 3000;
-
-
 
 app.listen(PORT, () => {
   console.log(
     `server Running on ${PORT}`
   );
 });
-

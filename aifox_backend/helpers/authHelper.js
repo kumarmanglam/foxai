@@ -1,4 +1,3 @@
-
 const bcrypt = require("bcrypt");
 
 
@@ -7,7 +6,7 @@ const bcrypt = require("bcrypt");
 const hashPassword = async (password) => {
 
     try {
-        const saltRounds=10; // it will display password as 10 bullet dots.
+        const saltRounds = 10; // it will display password as 10 bullet dots.
         const hashedPassword = await bcrypt.hash(password, saltRounds);
         console.log(hashPassword);
         return hashedPassword;
@@ -18,7 +17,6 @@ const hashPassword = async (password) => {
 
 
 //2nd function is used to decrypt the data after the compare
-
 const comparePassword = async (password, hashedPassword) => {
     return bcrypt.compare(password, hashedPassword);
 }
@@ -26,5 +24,5 @@ const comparePassword = async (password, hashedPassword) => {
 module.exports = {
     hashPassword,
     comparePassword,
-  };
+};
 
