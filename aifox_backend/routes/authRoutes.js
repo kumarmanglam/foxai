@@ -1,3 +1,4 @@
+
 const { Router } = require("express");
 const {
   loginController,
@@ -9,6 +10,7 @@ const {
 } = require("../controller/authController.js");
 const { requireSignIn, isAdmin } = require('../Middlewares/authMiddleware.js');
 
+
 const router = Router();
 
 router.post("/login",loginController);
@@ -19,4 +21,6 @@ router.get("/getAllUser", getAllUserController);
 router.get("/getUserInfo/:email_id", getUserController);
 
 
+
 module.exports = router;
+

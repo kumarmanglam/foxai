@@ -2,9 +2,11 @@ const path =require('path');
 const fs =require('fs');
 const pdf =require('pdf-parse');
 const Docs =require('../models/docsModel.js');
+
 const { processPDF } = require('../utils/embeddingUtils.js');
 const Embedding = require('../models/embeddingsModel.js');
 const uploadedFileDir = path.join(__dirname, '../uploaded_file');
+
 
 
 if (!fs.existsSync(uploadedFileDir)) {
@@ -99,7 +101,6 @@ const getDocsByDeptController = async (req, res) => {
   }
 };
 
-
 const getAllDocsController =async(req, res)=>{
   try{
     const docs = await Docs.find();
@@ -116,3 +117,4 @@ module.exports = {
   getDocsByDeptController,
   getAllDocsController,
 };
+

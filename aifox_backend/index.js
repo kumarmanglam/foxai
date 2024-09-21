@@ -1,3 +1,4 @@
+
 require('dotenv').config();
 const express = require("express");
 const dotenv = require("dotenv");
@@ -19,6 +20,7 @@ app.use(express.urlencoded({ extended: true }));
 
 app.use("/auth", authRoutes);
 app.use("/conversations", conversationRoutes);
+
 app.use("/documents", documentsRoutes);
 
 app.get("/", (req, res) => {
@@ -29,7 +31,9 @@ app.get("/", (req, res) => {
 
 });
 
+
 const PORT = process.env.PORT || 3000;
+
 
 
 app.listen(PORT, () => {
@@ -37,3 +41,4 @@ app.listen(PORT, () => {
     `server Running on ${PORT}`
   );
 });
+

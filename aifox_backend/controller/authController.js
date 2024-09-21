@@ -1,6 +1,8 @@
+
 const JWT = require("jsonwebtoken")
 const Person = require("../models/userModel.js")
 const { comparePassword, hashPassword } = require("../helpers/authHelper.js")
+
 
 //login
 
@@ -13,7 +15,6 @@ const loginController = async (req, res) => {
         message: "Invalid email or password",
       });
     }
-
 
     const user = await Person.findOne({ email_id });
     console.log(user);
@@ -40,6 +41,7 @@ const loginController = async (req, res) => {
     const token = await JWT.sign(
       { email: user.email_id },
       process.env.JWT_SECRET_KEY,
+
       { expiresIn: "7d" }
     );
 
@@ -72,9 +74,11 @@ const loginController = async (req, res) => {
 
 const addUserController=async(req,res)=>{
 
+
   try{
     const {name,email_id,password,department,role,phone_number}= req.body;
     const hashedPassword = await hashPassword(password);
+
   const newPerson = new Person({
     name,
     password:hashedPassword,
@@ -99,9 +103,11 @@ const addUserController=async(req,res)=>{
       console.log(email_id)
       const updates = req.body;
       const updatedUser = await Person.findOneAndUpdate(
+
         { email_id: email_id},
         updates
       );
+
 
   console.log(updatedUser)
       if (!updatedUser) {
@@ -119,7 +125,9 @@ const addUserController=async(req,res)=>{
   try {
     const email_id= req.params.email_id;
     console.log({email:email_id})
+
     const deletedUser = await Person.findOneAndDelete({email_id: email_id});
+
 
     if (!deletedUser) {
       return res.status(404).json({ error: "User not found" });
@@ -138,6 +146,7 @@ const addUserController=async(req,res)=>{
  const getAllUserController=async(req,res)=>{
   try {
     const users = await Person.find();
+
 console.log({users})
     if (users.length === 0) {
       return res.status(404).json({ message: "No users found" });
@@ -177,3 +186,4 @@ module.exports = {
   getAllUserController,
   getUserController
 };
+

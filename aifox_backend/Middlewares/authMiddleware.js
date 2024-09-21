@@ -1,3 +1,4 @@
+
 const JWT = require("jsonwebtoken")
 const Person = require("../models/userModel.js")
 
@@ -48,6 +49,7 @@ const isAdmin = async (req, res, next) => {
     });
   }
 };
+
 
 
 module.exports = {

@@ -1,4 +1,6 @@
+
 const { Router } = require("express");
+
 const { uploadDocs, deleteFile, getDocsByDeptController,getAllDocsController } = require('../controller/DocsController.js');
 const router = Router();
 const multer = require('multer');
