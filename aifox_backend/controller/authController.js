@@ -1,7 +1,7 @@
-import { comparePassword, hashPassword } from "../helpers/authHelper.js";
-import Person from "../models/userModel.js";
-import JWT from "jsonwebtoken";
 
+const JWT = require("jsonwebtoken")
+const Person = require("../models/userModel.js")
+const { comparePassword, hashPassword } = require("../helpers/authHelper.js")
 
 
 //login
@@ -16,7 +16,6 @@ const loginController = async (req, res) => {
       });
     }
 
-  
     const user = await Person.findOne({ email_id });
     console.log(user);
 
@@ -42,7 +41,8 @@ const loginController = async (req, res) => {
     const token = await JWT.sign(
       { email: user.email_id },
       process.env.JWT_SECRET_KEY,
-      { expiresIn: "7d" } 
+
+      { expiresIn: "7d" }
     );
 
     // Respond with token and user details
@@ -73,10 +73,12 @@ const loginController = async (req, res) => {
 //add user
 
 const addUserController=async(req,res)=>{
-  
+
+
   try{
     const {name,email_id,password,department,role,phone_number}= req.body;
-    const hashedPassword = await hashPassword(password); 
+    const hashedPassword = await hashPassword(password);
+
   const newPerson = new Person({
     name,
     password:hashedPassword,
@@ -101,10 +103,12 @@ const addUserController=async(req,res)=>{
       console.log(email_id)
       const updates = req.body;
       const updatedUser = await Person.findOneAndUpdate(
-        { email_id: email_id}, 
+
+        { email_id: email_id},
         updates
       );
-      
+
+
   console.log(updatedUser)
       if (!updatedUser) {
         return res.status(404).json({ message: 'User not found' });
@@ -115,13 +119,15 @@ const addUserController=async(req,res)=>{
       res.status(500).json({ success: false, message: 'Internal server error', error: error.message });
     }
   };
-  
+
  //delete
  const deleteUserController=async(req, res)=>{
   try {
     const email_id= req.params.email_id;
     console.log({email:email_id})
-    const deletedUser = await Person.findOneAndDelete({email_id: email_id}); 
+
+    const deletedUser = await Person.findOneAndDelete({email_id: email_id});
+
 
     if (!deletedUser) {
       return res.status(404).json({ error: "User not found" });
@@ -139,7 +145,8 @@ const addUserController=async(req,res)=>{
 
  const getAllUserController=async(req,res)=>{
   try {
-    const users = await Person.find(); 
+    const users = await Person.find();
+
 console.log({users})
     if (users.length === 0) {
       return res.status(404).json({ message: "No users found" });
@@ -156,19 +163,27 @@ console.log({users})
 
  const getUserController=async(req,res)=>{
   try {
-    const email_id = req.params.email_id; 
+    const email_id = req.params.email_id;
     console.log({email_id})
-    const user = await Person.findOne({email_id}); 
+    const user = await Person.findOne({email_id});
     console.log({user})
 
     if (!user) {
-      return res.status(404).json({ message: "User not found" }); 
+      return res.status(404).json({ message: "User not found" });
     }
 
-    res.status(200).json({ user }); 
+    res.status(200).json({ user });
   } catch (err) {
-    res.status(500).json({ error: "Internal server error" }); 
+    res.status(500).json({ error: "Internal server error" });
   }
  }
 
-export {addUserController,loginController,updateUserController,deleteUserController,getAllUserController,getUserController}
+module.exports = {
+  addUserController,
+  loginController,
+  updateUserController,
+  deleteUserController,
+  getAllUserController,
+  getUserController
+};
+

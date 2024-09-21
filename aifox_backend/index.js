@@ -1,22 +1,26 @@
-const express =require(express);
-import express from "express";
-import dotenv from "dotenv";
-import cors from "cors";
-import mongoose from "mongoose";
-import authRoutes from "./routes/authRoutes.js";
-const documentsRoutes = require("./routes/documentsRoutes.js");
-dotenv.config(); 
-mongoose.connect("mongodb+srv://akanksharpal:Akanksha24@cluster0.coiil.mongodb.net/").then(()=>console.log("DB Connected")).catch((err)=>console.log(err));
 
-const app = express(); 
+require('dotenv').config();
+const express = require("express");
+const dotenv = require("dotenv");
+const cors = require("cors");
+const morgan = require("morgan")
+const mongoose = require("mongoose");
+const authRoutes = require("./routes/authRoutes.js");
+const documentsRoutes = require("./routes/documentsRoutes.js");
+const conversationRoutes = require("./routes/conversationRoutes.js")
+
+mongoose.connect(process.env.MONGO_URL).then(()=>console.log("DB Connected")).catch((err)=>console.log(err));
+
+const app = express();
 app.use(cors());
 app.use(express.json());
-// app.use(morgan("dev")); 
-// app.use(express.urlencoded({ extended: true }));
+app.use(morgan("dev"));
+app.use(express.urlencoded({ extended: true }));
 
 
 app.use("/auth", authRoutes);
-// app.use("/conversation",conversationRoutes);
+app.use("/conversations", conversationRoutes);
+
 app.use("/documents", documentsRoutes);
 
 app.get("/", (req, res) => {
@@ -27,11 +31,14 @@ app.get("/", (req, res) => {
 
 });
 
-const PORT = process.env.PORT || 3000; 
+
+const PORT = process.env.PORT || 3000;
+
 
 
 app.listen(PORT, () => {
   console.log(
     `server Running on ${PORT}`
-  ); 
+  );
 });
+

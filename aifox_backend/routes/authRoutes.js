@@ -1,11 +1,16 @@
-import { Router } from "express";
-import { loginController } from "../controller/authController.js";
-import {addUserController} from "../controller/authController.js";
-import { requireSignIn, isAdmin } from '../Middlewares/authMiddleware.js'; 
-import { updateUserController} from "../controller/authController.js";
-import {deleteUserController} from "../controller/authController.js";
-import{getAllUserController} from "../controller/authController.js";
-import { getUserController } from "../controller/authController.js";
+
+const { Router } = require("express");
+const {
+  loginController,
+  addUserController,
+  updateUserController,
+  deleteUserController,
+  getAllUserController,
+  getUserController
+} = require("../controller/authController.js");
+const { requireSignIn, isAdmin } = require('../Middlewares/authMiddleware.js');
+
+
 const router = Router();
 
 router.post("/login",loginController);
@@ -16,4 +21,6 @@ router.get("/getAllUser", getAllUserController);
 router.get("/getUserInfo/:email_id", getUserController);
 
 
-export default router; 
+
+module.exports = router;
+

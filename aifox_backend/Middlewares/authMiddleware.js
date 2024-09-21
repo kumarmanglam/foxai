@@ -1,5 +1,6 @@
-import JWT from "jsonwebtoken";
-import Person from "../models/userModel.js";
+
+const JWT = require("jsonwebtoken")
+const Person = require("../models/userModel.js")
 
 // Protected routes, token-based
 const requireSignIn = async (req, res, next) => {
@@ -12,7 +13,7 @@ const requireSignIn = async (req, res, next) => {
   try {
     const decoded = JWT.verify(token, process.env.JWT_SECRET_KEY);
     req.user = decoded;
-    
+
     next();
   } catch (err) {
     console.log(err);
@@ -50,6 +51,8 @@ const isAdmin = async (req, res, next) => {
 };
 
 
-export { requireSignIn, isAdmin };
 
-
+module.exports = {
+  requireSignIn,
+  isAdmin,
+};

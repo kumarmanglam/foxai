@@ -1,4 +1,6 @@
-const Router =require('express');
+
+const { Router } = require("express");
+
 const { uploadDocs, deleteFile, getDocsByDeptController,getAllDocsController } = require('../controller/DocsController.js');
 const router = Router();
 const multer = require('multer');
@@ -11,4 +13,3 @@ router.get('/getDocsByDept', getDocsByDeptController);
 router.get('/getAllDocs', getAllDocsController);
 
 module.exports = router;
-
