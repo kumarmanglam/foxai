@@ -4,10 +4,11 @@ const pdf = require('pdf-parse');
 const axios = require('axios');
 
 require("dotenv").config();
+const { generateEmbedding } = require('./chatUtils.js');
 // const hfToken = process.env.HF_TOKEN;
 // const embeddingUrl = process.env.EMBEDDING_URL;
 
-const hfToken = "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";
+const hfToken = "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";
 const embeddingUrl = "https://api-inference.huggingface.co/pipeline/feature-extraction/sentence-transformers/all-MiniLM-L6-v2";
 
 // Extract text from PDF
@@ -73,10 +74,12 @@ async function generateEmbeddingWithRetry(text, retries = 5, initialDelay = 2000
 async function saveDataToMongo(data, collection) {
     for (const item of data) {
         try {
-            const embedding = await generateEmbeddingWithRetry(item.text);
+            // const embedding = await generateEmbeddingWithRetry(item.text);
+            const embedding = await generateEmbedding(item.text);
             const document = {
                 text: item.text,
                 source: item.source,
+                pdf_id: item.pdf_id,
                 embeddings: embedding,
             };
             console.log(embedding);
@@ -96,7 +99,7 @@ async function saveDataToMongo(data, collection) {
 }
 
 // Process PDF
-async function processPDF(pdfFilePath, documentName, collection) {
+async function processPDF(pdfFilePath, documentName, collection, pdf_id) {
     try {
         console.log(`Processing PDF at path: ${pdfFilePath}`);
 
@@ -105,12 +108,15 @@ async function processPDF(pdfFilePath, documentName, collection) {
 
         const data = textChunks.map(chunk => ({
             text: chunk,
-            source: documentName, // Use the document name passed from the controller
+            source: documentName,
+            pdf_id: pdf_id
         }));
 
         await saveDataToMongo(data, collection);
+        return true;
         console.log('PDF processing and embedding completed successfully.');
     } catch (error) {
+        return false;
         console.error(`Error processing PDF: ${error.message}`);
     }
 }

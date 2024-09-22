@@ -1,7 +1,7 @@
-const path =require('path');
-const fs =require('fs');
-const pdf =require('pdf-parse');
-const Docs =require('../models/docsModel.js');
+const path = require('path');
+const fs = require('fs');
+const pdf = require('pdf-parse');
+const Docs = require('../models/docsModel.js');
 
 const { processPDF } = require('../utils/embeddingUtils.js');
 const Embedding = require('../models/embeddingsModel.js');
@@ -15,35 +15,44 @@ if (!fs.existsSync(uploadedFileDir)) {
 
 const uploadDocs = async (req, res) => {
   try {
-      const file = req.file;
-      const { department } = req.body;
+    const file = req.file;
+    const { department } = req.body;
 
-      if (!file) {
-          return res.status(400).send('No PDF file uploaded.');
-      }
-      if (!department || !['HR', 'Engineer', 'Senior Developer', 'Director'].includes(department)) {
-          return res.status(400).send('Invalid department.');
-      }
+    if (!file) {
+      return res.status(400).send('No PDF file uploaded.');
+    }
+    if (!department || !['HR', 'Engineer', 'Senior Developer', 'Director'].includes(department)) {
+      return res.status(400).send('Invalid department.');
+    }
 
-      const documentName = file.originalname;
-      const newDocument = new Docs({
-          department: department,
-          docs_name: documentName,
-      });
+    const documentName = file.originalname;
 
-      await newDocument.save();
+    const newDocument = new Docs({
+      department: department,
+      docs_name: documentName,
+    });
 
-      const filePath = file.path;
-      await processPDF(filePath, documentName, Embedding.collection);
+    const savedDocument = await newDocument.save();
 
+    const pdf_id = savedDocument._id;
+
+
+    const filePath = file.path;
+    let flag = await processPDF(filePath, documentName, Embedding.collection, pdf_id);
+
+    if (flag) {
       res.status(200).json({
-          message: 'PDF uploaded, processed, and embeddings saved successfully.',
-          department: department,
-          documentId: newDocument._id,
+        message: 'PDF uploaded, processed, and embeddings saved successfully.',
+        documentId: pdf_id,
       });
-  } catch (err) {
-      console.error(`Error in uploadDocs: ${err.message}`);
+    }
+    else {
       res.status(500).send("An error occurred while uploading and processing the PDF.");
+    }
+
+  } catch (err) {
+    console.error(`Error in uploadDocs: ${err.message}`);
+    res.status(500).send("An error occurred while uploading and processing the PDF.");
   }
 };
 
@@ -101,11 +110,11 @@ const getDocsByDeptController = async (req, res) => {
   }
 };
 
-const getAllDocsController =async(req, res)=>{
-  try{
+const getAllDocsController = async (req, res) => {
+  try {
     const docs = await Docs.find();
     res.send(docs);
-  }catch(error){
+  } catch (error) {
     console.error(error);
     res.status(500).json({ error: 'An error occurred while retrieving documents.' });
   }
