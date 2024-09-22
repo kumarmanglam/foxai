@@ -1,0 +1,52 @@
+.wraper-container {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    flex-direction: column;
+    /* background-color: antiquewhite; */
+    /* height: 100vh; */
+}
+
+.btn-container {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    /* padding-top: 200px; */
+    gap: 50px;
+}
+
+.btns {
+    padding: 5px;
+    font-family: sans-serif;
+    font-size: 1rem;
+    border-radius: 10px;
+    cursor: pointer;
+    border: none;
+    background-color: aqua;
+
+}
+
+.table {
+    /* border: 2px solid black; */
+    padding: 20px;
+    /* background-color: antiquewhite; */
+    /* margin-top: 50px; */
+    border-collapse: collapse;
+    margin-top: 20px;
+
+
+
+}
+
+th,
+td {
+    border: 1px solid black;
+    padding: 10px;
+}
+
+.openChatboxBtn {
+    padding: 5px;
+    border-radius: 10px;
+    border: none;
+    cursor: pointer;
+}
