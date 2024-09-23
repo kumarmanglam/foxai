@@ -28,4 +28,14 @@
 .upload-button {
     padding: 10px 25px;
     border: 1px solid black;
+    border-radius: 5px;
+    cursor: pointer;
+    width: 150px;
+}
+
+.button-disabled {
+    cursor: initial;
+    background-color: #D1D1D1;
+    color: #a19f9f;
+    border: grey
 }
