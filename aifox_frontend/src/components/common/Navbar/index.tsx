@@ -7,17 +7,22 @@ import { setIsUserLoggedIn } from '../../../store/reducers/userSlice'
 const Navbar = () => {
     const navigate = useNavigate();
     const dispatch = useDispatch();
+
+    const handleImageClick = () => {
+        navigate("/home");
+    }
     return (
         <div className='entireLayout'>
-            <div className='navLogo'>
+            <div className='navLogo' onClick={handleImageClick}>
                 <img src={fox} alt='foxai-logo' id="fox-ai-logo" />
                 <p id="fox-ai-heading">Fox AI</p>
             </div>
             <div className='home-logout'>
-                <button id='navHomeButton' className="actionButton" onClick={() => navigate("/foxai")}>Home</button>
+                <button id='navHomeButton' className="actionButton" onClick={() => navigate("/home")}>Home</button>
                 <button id='navLogoutButton' className="actionButton" onClick={() => {
                     navigate("/login");
                     dispatch(setIsUserLoggedIn(false));
+                    sessionStorage.clear();
                 }}>Logout</button>
             </div>
         </div>

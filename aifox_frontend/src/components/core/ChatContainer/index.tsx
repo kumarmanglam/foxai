@@ -8,17 +8,24 @@ import fox from "../../../assets/icons/fox.png";
 import copy from "../../../assets/icons/copy.png";
 import read_aloud from "../../../assets/icons/read_aloud.png";
 import restart from "../../../assets/icons/restart.png";
-import { useSelector } from 'react-redux';
+import { useDispatch, useSelector } from 'react-redux';
 import { selectChatHistory } from '../../../store/selectors/chatSelector';
 import ReactMarkdown from "react-markdown";
 import Markdown from 'react-markdown';
 import remarkGfm from 'remark-gfm';
 import CodeBlock from '../../common/CodeBlock';
+import { useNavigate, useParams } from 'react-router-dom';
+import { selectUserDepartment } from '../../../store/selectors/userSelector';
 
 const ChatContainer = () => {
-    console.log("Jio")
+
     const scrollRef = useRef<HTMLDivElement>(null);
     const chatHistory = useSelector(selectChatHistory);
+
+    const { document_id } = useParams();
+
+    const currentDocument = useSelector(selectUserDepartment);
+
 
     useEffect(() => {
         scrollRef.current?.scrollIntoView({ behavior: 'smooth' })
@@ -35,6 +42,7 @@ const ChatContainer = () => {
             });
     };
 
+
     const handleReadAloudClick = (text: string) => {
         const utterance = new SpeechSynthesisUtterance(text);
         speechSynthesis.speak(utterance); // Start reading the text aloud
@@ -42,10 +50,13 @@ const ChatContainer = () => {
 
     return (
         <div className='chat-container'>
+            <div className='chat-heading'>
+                <p className='chat-heading-p'><span>PDF Context :</span><span>{currentDocument}</span></p>
+            </div>
             <div className='chat-box'>
                 {
                     chatHistory.length === 0 ?
-                        <div className='chat-box-empty-logo'>
+                        <div className='chat-box-empty-logo' >
                             <img className='logo-inside-chatbox' src={fox} alt="" />
                             <p className='welcome-text'>Welcome! to <span>Fox AI</span></p></div> :
                         <div className='chat-log'>
@@ -57,7 +68,12 @@ const ChatContainer = () => {
                                             <div className='human-message'>{item["Human"]}</div>
                                         </div>
                                         {
-                                            item["AI"]?.length == null ? null : <div className='chat-message chat-ai'>
+                                            item["AI"] == null ? (
+                                                <div className='chat-message chat-ai'>
+                                                    <div className='ai-avatar'><img src={fox} className='fox-icon' /></div>
+                                                    <div className='ai-response'></div>
+                                                </div>
+                                            ) : <div className='chat-message chat-ai'>
                                                 <div className='ai-avatar'><img src={fox} className='fox-icon' /></div>
                                                 <div className='ai-response'>
                                                     <div className='ai-message'>

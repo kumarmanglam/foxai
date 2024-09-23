@@ -6,6 +6,7 @@ import { useDispatch, useSelector } from 'react-redux';
 import { selectChatHistory } from '../../../store/selectors/chatSelector';
 import { callConversationAPI } from '../../../services/conversation';
 import { setChatHistory } from '../../../store/reducers/chatSlice';
+import { useParams } from 'react-router-dom';
 export interface ChatEntry {
     Human: string,
     AI: string,
@@ -14,7 +15,7 @@ const InputPrompt = () => {
     const [buttonDisabled, setButtonDisabled] = useState<boolean>(true);
     const buttonRef = useRef<HTMLButtonElement>(null);
     const [query, setQuery] = useState<string>("");
-
+    const { document_id } = useParams();
     const chatHistory = useSelector(selectChatHistory);
     const dispatch = useDispatch();
 
@@ -33,18 +34,33 @@ const InputPrompt = () => {
 
     const handlePromptSubmit = async (event: React.FormEvent<HTMLFormElement>) => {
         // await hitAPI(query);
-        event.preventDefault();
-        dispatch(setChatHistory([...chatHistory, { "Human": query }]));
-        setQuery("");
-        const response = await callConversationAPI(query);
-        // const response = "sd";
-        console.log(response?.response);
-        const chatEntry = {
-            "Human": query,
-            "AI": response?.response,
-        };
-        dispatch(setChatHistory([...chatHistory, chatEntry]));
-        console.log([...chatHistory, chatEntry]);
+        try {
+            setButtonDisabled(true);
+            event.preventDefault();
+            dispatch(setChatHistory([...chatHistory, { "Human": query }]));
+            const prompt = query;
+            setQuery("");
+
+            console.log(document_id);
+            console.log(prompt);
+            const response = await callConversationAPI(document_id, prompt);
+            // const response = "sd";
+            console.log(response?.response);
+            const chatEntry = {
+                "Human": query,
+                "AI": response?.data.answer,
+            };
+            dispatch(setChatHistory([...chatHistory, chatEntry]));
+            console.log([...chatHistory, chatEntry]);
+        } catch (error) {
+            const chatEntry = {
+                "Human": query,
+                "AI": "I appreciate your inquiry, but I'm not in a position to respond to that specific question right now.",
+            };
+
+            dispatch(setChatHistory([...chatHistory, chatEntry]));
+        }
+
     }
 
 
