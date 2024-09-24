@@ -10,7 +10,7 @@ const { requireSignIn, isAdmin } = require('../Middlewares/authMiddleware.js');
 
 router.delete('/deleteDocs', requireSignIn, isAdmin, deleteFile);
 router.post('/uploadDocs', requireSignIn, isAdmin, upload.single('pdf'), uploadDocs);
-router.get('/getDocsByDept', requireSignIn, getDocsByDeptController);
+router.post('/getDocsByDept', requireSignIn, getDocsByDeptController);
 router.get('/getAllDocs', requireSignIn, isAdmin, getAllDocsController);
 
 
