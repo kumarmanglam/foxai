@@ -22,7 +22,7 @@ const uploadDocs = async (req, res) => {
     if (!file) {
       return res.status(400).send('No PDF file uploaded.');
     }
-    if (!department || !['HR', 'Engineer', 'Senior Developer', 'Director'].includes(department)) {
+    if (!department) {
 
       return res.status(400).send('Invalid department.');
     }
