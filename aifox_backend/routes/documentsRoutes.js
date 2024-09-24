@@ -8,10 +8,10 @@ const upload = multer({ dest: 'uploads/' });
 
 const { requireSignIn, isAdmin } = require('../Middlewares/authMiddleware.js');
 
-router.delete('/deleteDocs', isAdmin, deleteFile);
-router.post('/uploadDocs', isAdmin, upload.single('pdf'), uploadDocs);
+router.delete('/deleteDocs', requireSignIn, isAdmin, deleteFile);
+router.post('/uploadDocs', requireSignIn, isAdmin, upload.single('pdf'), uploadDocs);
 router.get('/getDocsByDept', requireSignIn, getDocsByDeptController);
-router.get('/getAllDocs', isAdmin, getAllDocsController);
+router.get('/getAllDocs', requireSignIn, isAdmin, getAllDocsController);
 
 
 module.exports = router;
