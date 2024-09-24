@@ -42,7 +42,7 @@ const loginController = async (req, res) => {
 
       { expiresIn: "7d" }
     );
-    // console.log(user)
+
 
     // Respond with token and user details
     res.status(200).send({
@@ -73,6 +73,7 @@ const loginController = async (req, res) => {
 //add user
 
 const addUserController = async (req, res) => {
+
   try {
     const { name, email_id, password, department, role, phone_number } = req.body;
     const hashedPassword = await hashPassword(password);
@@ -82,7 +83,10 @@ const addUserController = async (req, res) => {
       password: hashedPassword,
       email_id,
       department,
-      role, phone_number
+
+      role,
+      phone_number
+
     });
     // console.log(newPerson)
     const response = await newPerson.save();
