@@ -11,7 +11,9 @@ const requireSignIn = async (req, res, next) => {
   const token = req.headers.authorization.split(" ")[1];
   if (!token) return res.status(401).json({ error: "unauthorized" });
   try {
+
     const decoded = JWT.verify(token, "foxai");
+
     req.user = decoded;
 
     next();
@@ -24,6 +26,7 @@ const requireSignIn = async (req, res, next) => {
 // Middleware for admin access
 const isAdmin = async (req, res, next) => {
   try {
+
     const user = await Person.findOne({ email_id: req.user.email });
     if (!user) {
       return res.status(404).json({

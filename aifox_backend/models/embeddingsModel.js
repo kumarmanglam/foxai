@@ -11,11 +11,13 @@ const embeddingsSchema = new mongoose.Schema({
     required: true,
     trim: true
   },
+
   pdf_id: {
     type: String,
     required: true,
     trim: true
   },
+
   embeddings: {
     type: [Number],
     required: true,

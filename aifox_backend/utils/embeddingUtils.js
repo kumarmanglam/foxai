@@ -5,13 +5,10 @@ const axios = require('axios');
 
 require("dotenv").config();
 const { generateEmbedding } = require('./chatUtils.js');
-// const hfToken = process.env.HF_TOKEN;
-// const embeddingUrl = process.env.EMBEDDING_URL;
 
-const hfToken = "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";
+
 const embeddingUrl = "https://api-inference.huggingface.co/pipeline/feature-extraction/sentence-transformers/all-MiniLM-L6-v2";
 
-// Extract text from PDF
 async function extractPDFText(pdfPath) {
     try {
         const dataBuffer = fs.readFileSync(pdfPath);
@@ -24,7 +21,6 @@ async function extractPDFText(pdfPath) {
     }
 }
 
-// Split text into chunks
 function splitTextIntoChunks(text) {
     const chunkSize = 2250;
     const chunkOverlap = 50;
@@ -39,7 +35,6 @@ function splitTextIntoChunks(text) {
     return chunks;
 }
 
-// Generate embeddings with retry mechanism
 async function generateEmbeddingWithRetry(text, retries = 5, initialDelay = 2000) {
     let delay = initialDelay;
     for (let i = 0; i < retries; i++) {
@@ -74,7 +69,7 @@ async function generateEmbeddingWithRetry(text, retries = 5, initialDelay = 2000
 async function saveDataToMongo(data, collection) {
     for (const item of data) {
         try {
-            // const embedding = await generateEmbeddingWithRetry(item.text);
+
             const embedding = await generateEmbedding(item.text);
             const document = {
                 text: item.text,
@@ -82,7 +77,7 @@ async function saveDataToMongo(data, collection) {
                 pdf_id: item.pdf_id,
                 embeddings: embedding,
             };
-            console.log(embedding);
+
             const result = await collection.insertOne(document);
             if (result.acknowledged) {
                 console.log("inserted ")
@@ -101,8 +96,6 @@ async function saveDataToMongo(data, collection) {
 // Process PDF
 async function processPDF(pdfFilePath, documentName, collection, pdf_id) {
     try {
-        console.log(`Processing PDF at path: ${pdfFilePath}`);
-
         const pdfText = await extractPDFText(pdfFilePath);
         const textChunks = splitTextIntoChunks(pdfText);
 
@@ -118,6 +111,7 @@ async function processPDF(pdfFilePath, documentName, collection, pdf_id) {
     } catch (error) {
         return false;
         console.error(`Error processing PDF: ${error.message}`);
+
     }
 }
 

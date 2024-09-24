@@ -18,10 +18,12 @@ const uploadDocs = async (req, res) => {
     const file = req.file;
     const { department } = req.body;
 
+
     if (!file) {
       return res.status(400).send('No PDF file uploaded.');
     }
     if (!department || !['HR', 'Engineer', 'Senior Developer', 'Director'].includes(department)) {
+
       return res.status(400).send('Invalid department.');
     }
 
@@ -34,16 +36,20 @@ const uploadDocs = async (req, res) => {
 
     const savedDocument = await newDocument.save();
 
+
     const pdf_id = savedDocument._id;
 
 
     const filePath = file.path;
     let flag = await processPDF(filePath, documentName, Embedding.collection, pdf_id);
 
+
     if (flag) {
       res.status(200).json({
         message: 'PDF uploaded, processed, and embeddings saved successfully.',
+
         documentId: pdf_id,
+
       });
     }
     else {
@@ -84,7 +90,9 @@ const deleteFile = async (req, res) => {
     await Docs.findByIdAndDelete(documentId);
 
     // Delete associated embeddings from the Embeddings collection
+
     const deletedEmbeddings = await Embedding.deleteMany({ pdf_id: new ObjectId(documentId) });
+
 
     res.send({
       message: 'File, document, and related embeddings deleted successfully.',
@@ -126,3 +134,4 @@ module.exports = {
   getDocsByDeptController,
   getAllDocsController,
 };
+

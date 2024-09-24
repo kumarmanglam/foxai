@@ -11,25 +11,44 @@ const fakeAPI = (): Promise<string> => {
     });
 };
 
-export const callConversationAPI = async (prompt: string): Promise<any> => {
+export const callConversationAPI = async (pdfId: string | undefined, query: string): Promise<any> => {
     // return { "response": "api working" };
-    const url = 'http://172.16.21.248:3000/conversation/';
+    const url = 'http://localhost:3000/conversations/conversation';
 
-    const formData = new URLSearchParams();
-    formData.append('prompt', prompt);
-    formData.append('data', JSON.stringify([{}]))
+    const requestData = {
+        userId: "66efc98daa36b7a795df7e6d",
+        pdfId,
+        userRole: "user",
+        query
+    };
+
     try {
-        const response = await axios.post(url, formData, {
+        const response = await axios.post(url, requestData, {
             headers: {
-                'Content-Type': 'application/x-www-form-urlencoded',
-            },
+                'Content-Type': 'application/json',
+            }
         });
-        // console.log(response.data)
-        return response.data;
+        return response;
     } catch (error) {
-        console.error('Error hitting the API:', error);
+        console.log("Error hitting the API: ", error);
         throw error;
     }
+
+    // const formData = new URLSearchParams();
+    // formData.append('prompt', prompt);
+    // formData.append('data', JSON.stringify([{}]))
+    // try {
+    //     const response = await axios.post(url, formData, {
+    //         headers: {
+    //             'Content-Type': 'application/x-www-form-urlencoded',
+    //         },
+    //     });
+    //     // console.log(response.data)
+    //     return response.data;
+    // } catch (error) {
+    //     console.error('Error hitting the API:', error);
+    //     throw error;
+    // }
 };
 
 export const getChatHistoryAPI = async (): Promise<ChatEntry[]> => {
