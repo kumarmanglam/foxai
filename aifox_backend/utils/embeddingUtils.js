@@ -2,16 +2,13 @@ const path = require('path');
 const fs = require('fs');
 const pdf = require('pdf-parse');
 const axios = require('axios');
-const { generateEmbedding } = require('./chatUtils');
 
 require("dotenv").config();
-// const hfToken = process.env.HF_TOKEN;
-// const embeddingUrl = process.env.EMBEDDING_URL;
+const { generateEmbedding } = require('./chatUtils.js');
 
-const hfToken = "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";
+
 const embeddingUrl = "https://api-inference.huggingface.co/pipeline/feature-extraction/sentence-transformers/all-MiniLM-L6-v2";
 
-// Extract text from PDF
 async function extractPDFText(pdfPath) {
     try {
         const dataBuffer = fs.readFileSync(pdfPath);
@@ -24,7 +21,6 @@ async function extractPDFText(pdfPath) {
     }
 }
 
-// Split text into chunks
 function splitTextIntoChunks(text) {
     const chunkSize = 2250;
     const chunkOverlap = 50;
@@ -39,11 +35,41 @@ function splitTextIntoChunks(text) {
     return chunks;
 }
 
+async function generateEmbeddingWithRetry(text, retries = 5, initialDelay = 2000) {
+    let delay = initialDelay;
+    for (let i = 0; i < retries; i++) {
+        try {
+            const response = await axios.post(
+                embeddingUrl,
+                { inputs: text },
+                {
+                    headers: {
+                        Authorization: `Bearer ${hfToken}`,
+                        'Content-Type': 'application/json',
+                    },
+                }
+            );
+            console.log('Embedding generated successfully.');
+            return response.data;
+        } catch (error) {
+            console.error(`Error generating embedding: ${error.message}`);
+            if (error.response && error.response.status === 429 && i < retries - 1) {
+                console.log(`Rate limit hit. Retrying in ${delay / 1000} seconds...`);
+                await new Promise(resolve => setTimeout(resolve, delay));
+                delay *= 2;
+            } else {
+                throw error;
+            }
+        }
+    }
+    throw new Error('Max retries reached while generating embeddings.');
+}
 
+// Save data to MongoDB
 async function saveDataToMongo(data, collection) {
     for (const item of data) {
         try {
-            console.log("item..", item)
+
             const embedding = await generateEmbedding(item.text);
             const document = {
                 text: item.text,
@@ -51,7 +77,7 @@ async function saveDataToMongo(data, collection) {
                 pdf_id: item.pdf_id,
                 embeddings: embedding,
             };
-            // console.log(embedding);
+
             const result = await collection.insertOne(document);
             if (result.acknowledged) {
                 console.log("inserted ")
@@ -70,25 +96,22 @@ async function saveDataToMongo(data, collection) {
 // Process PDF
 async function processPDF(pdfFilePath, documentName, collection, pdf_id) {
     try {
-        // console.log(`Processing PDF at path: ${pdfFilePath}`);
-
         const pdfText = await extractPDFText(pdfFilePath);
         const textChunks = splitTextIntoChunks(pdfText);
 
         const data = textChunks.map(chunk => ({
             text: chunk,
-            source: documentName, // Use the document name passed from the controller,
+            source: documentName,
             pdf_id: pdf_id
         }));
 
         await saveDataToMongo(data, collection);
-
-        console.log('PDF processing and embedding completed successfully.');
         return true;
+        console.log('PDF processing and embedding completed successfully.');
     } catch (error) {
-
-        console.error(`Error processing PDF: ${error.message}`);
         return false;
+        console.error(`Error processing PDF: ${error.message}`);
+
     }
 }
 

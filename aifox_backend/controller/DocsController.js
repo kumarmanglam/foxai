@@ -18,39 +18,44 @@ const uploadDocs = async (req, res) => {
     const file = req.file;
     const { department } = req.body;
 
-    console.log(department);
 
     if (!file) {
       return res.status(400).send('No PDF file uploaded.');
     }
-    if (!department) {
+    if (!department || !['HR', 'Engineer', 'Senior Developer', 'Director'].includes(department)) {
+
       return res.status(400).send('Invalid department.');
     }
 
     const documentName = file.originalname;
+
     const newDocument = new Docs({
       department: department,
       docs_name: documentName,
     });
 
     const savedDocument = await newDocument.save();
+
+
     const pdf_id = savedDocument._id;
 
-    // console.log()
 
     const filePath = file.path;
-    const flag = await processPDF(filePath, documentName, Embedding.collection, pdf_id);
+    let flag = await processPDF(filePath, documentName, Embedding.collection, pdf_id);
+
 
     if (flag) {
       res.status(200).json({
         message: 'PDF uploaded, processed, and embeddings saved successfully.',
-        department: department,
-        documentId: newDocument._id,
+
+        documentId: pdf_id,
+
       });
     }
     else {
       res.status(500).send("An error occurred while uploading and processing the PDF.");
     }
+
   } catch (err) {
     console.error(`Error in uploadDocs: ${err.message}`);
     res.status(500).send("An error occurred while uploading and processing the PDF.");
@@ -85,7 +90,9 @@ const deleteFile = async (req, res) => {
     await Docs.findByIdAndDelete(documentId);
 
     // Delete associated embeddings from the Embeddings collection
-    const deletedEmbeddings = await Embedding.deleteMany({ source: `${docs_name}.pdf` });
+
+    const deletedEmbeddings = await Embedding.deleteMany({ pdf_id: new ObjectId(documentId) });
+
 
     res.send({
       message: 'File, document, and related embeddings deleted successfully.',
