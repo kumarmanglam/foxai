@@ -3,7 +3,7 @@ import "./style.css"
 
 import { Tooltip } from 'react-tooltip';
 import InputPrompt from '../InputPrompt';
-
+import loadingDots from "../../../assets/icons/loading-dots.gif"
 import fox from "../../../assets/icons/fox.png";
 import copy from "../../../assets/icons/copy.png";
 import read_aloud from "../../../assets/icons/read_aloud.png";
@@ -16,15 +16,37 @@ import remarkGfm from 'remark-gfm';
 import CodeBlock from '../../common/CodeBlock';
 import { useNavigate, useParams } from 'react-router-dom';
 import { selectUserDepartment } from '../../../store/selectors/userSelector';
+import { deleteChatHistory, fetchChatHistory } from '../../../services/conversation';
+import { setChatHistory } from '../../../store/reducers/chatSlice';
 
 const ChatContainer = () => {
 
     const scrollRef = useRef<HTMLDivElement>(null);
     const chatHistory = useSelector(selectChatHistory);
+    const [documentId, setDocumentId] = useState<string>();
+    const document_name = sessionStorage.getItem("document_name");
+    const dispatch = useDispatch();
+    const [count, setCount] = useState<number>(0);
+    const currentDocument = useSelector(selectUserDepartment);
+
 
     const { document_id } = useParams();
+    const initiateChatHistory = async () => {
+        const history = await fetchChatHistory(document_id);
+        console.log(history)
+        dispatch(setChatHistory(history));
+    }
 
-    const currentDocument = useSelector(selectUserDepartment);
+    useEffect(() => {
+        initiateChatHistory();
+        setDocumentId(document_id);
+    }, []);
+
+    useEffect(() => {
+        initiateChatHistory();
+        console.log(chatHistory)
+    }, [count]);
+
 
 
     useEffect(() => {
@@ -51,7 +73,12 @@ const ChatContainer = () => {
     return (
         <div className='chat-container'>
             <div className='chat-heading'>
-                <p className='chat-heading-p'><span>PDF Context :</span><span>{currentDocument}</span></p>
+                <p className='chat-heading-p'><span>PDF Context :</span><span>{document_name}</span></p>
+                <p><button className='deleteBtn' onClick={() => {
+                    deleteChatHistory(document_id);
+                    console.log("button clicked");
+                    setCount(count + 1);
+                }}>Delete Chat History</button> </p>
             </div>
             <div className='chat-box'>
                 {
@@ -63,22 +90,21 @@ const ChatContainer = () => {
                             {chatHistory.map((item: any, index: number) => {
                                 return (
                                     <div key={index}>
-
                                         <div className='chat-message chat-human'>
-                                            <div className='human-message'>{item["Human"]}</div>
+                                            <div className='human-message'>{item["human"]}</div>
                                         </div>
                                         {
-                                            item["AI"] == null ? (
+                                            item["ai"] == null ? (
                                                 <div className='chat-message chat-ai'>
                                                     <div className='ai-avatar'><img src={fox} className='fox-icon' /></div>
-                                                    <div className='ai-response'></div>
+                                                    <div className='ai-response'><img src={loadingDots} className='loading-icon' /></div>
                                                 </div>
                                             ) : <div className='chat-message chat-ai'>
                                                 <div className='ai-avatar'><img src={fox} className='fox-icon' /></div>
                                                 <div className='ai-response'>
                                                     <div className='ai-message'>
                                                         <Markdown
-                                                            children={item["AI"]}
+                                                            children={item["ai"]}
                                                             remarkPlugins={[remarkGfm]}
                                                             components={{
                                                                 code: ({ node, inline, className, children, ...props }) => {
@@ -91,7 +117,7 @@ const ChatContainer = () => {
                                                             }}
                                                         /></div>
                                                     <div className='ai-actions'>
-                                                        <a data-tooltip-id="tooltip-read-aloud" onClick={() => handleReadAloudClick(item["AI"])}>
+                                                        <a data-tooltip-id="tooltip-read-aloud" onClick={() => handleReadAloudClick(item["ai"])}>
                                                             <img src={read_aloud} className='action-icon' alt="Read Aloud" />
                                                         </a>
                                                         <Tooltip
@@ -101,7 +127,7 @@ const ChatContainer = () => {
                                                         />
                                                         <a
                                                             data-tooltip-id="tooltip-copy"
-                                                            onClick={() => handleCopyClick(item["AI"])} >
+                                                            onClick={() => handleCopyClick(item["ai"])} >
                                                             <img src={copy} className='action-icon' alt="Copy" />
                                                         </a>
                                                         <Tooltip
@@ -109,7 +135,7 @@ const ChatContainer = () => {
                                                             content="Copy"
                                                             place='bottom'
                                                         />
-                                                        {
+                                                        {/* {
                                                             chatHistory.length - 1 == index ? <div><a data-tooltip-id="tooltip-restart">
                                                                 <img src={restart} className='action-icon' alt="Restart" />
                                                             </a>
@@ -118,7 +144,7 @@ const ChatContainer = () => {
                                                                     content="Regenerate"
                                                                     place='bottom'
                                                                 /></div> : null
-                                                        }
+                                                        } */}
                                                     </div>
                                                 </div>
                                             </div>

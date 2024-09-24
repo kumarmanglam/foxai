@@ -8,8 +8,8 @@ import { callConversationAPI } from '../../../services/conversation';
 import { setChatHistory } from '../../../store/reducers/chatSlice';
 import { useParams } from 'react-router-dom';
 export interface ChatEntry {
-    Human: string,
-    AI: string,
+    human: string,
+    ai: string,
 }
 const InputPrompt = () => {
     const [buttonDisabled, setButtonDisabled] = useState<boolean>(true);
@@ -37,7 +37,7 @@ const InputPrompt = () => {
         try {
             setButtonDisabled(true);
             event.preventDefault();
-            dispatch(setChatHistory([...chatHistory, { "Human": query }]));
+            dispatch(setChatHistory([...chatHistory, { "human": query }]));
             const prompt = query;
             setQuery("");
 
@@ -47,15 +47,15 @@ const InputPrompt = () => {
             // const response = "sd";
             console.log(response?.response);
             const chatEntry = {
-                "Human": query,
-                "AI": response?.data.answer,
+                "human": query,
+                "ai": response?.data.answer,
             };
             dispatch(setChatHistory([...chatHistory, chatEntry]));
             console.log([...chatHistory, chatEntry]);
         } catch (error) {
             const chatEntry = {
-                "Human": query,
-                "AI": "I appreciate your inquiry, but I'm not in a position to respond to that specific question right now.",
+                "human": query,
+                "ai": "I appreciate your inquiry, but I'm not in a position to respond to that specific question right now.",
             };
 
             dispatch(setChatHistory([...chatHistory, chatEntry]));

@@ -3,6 +3,8 @@ const JWT = require("jsonwebtoken")
 const Person = require("../models/userModel.js")
 const { comparePassword, hashPassword } = require("../helpers/authHelper.js")
 
+require("dotenv").config({ path: '../.env' });
+
 //login
 const loginController = async (req, res) => {
   try {
@@ -38,8 +40,7 @@ const loginController = async (req, res) => {
     // Create JWT token
     const token = await JWT.sign(
       { email: user.email_id },
-      "foxai",
-
+      process.env.JWT_SECRET_KEY,
       { expiresIn: "7d" }
     );
 

@@ -6,19 +6,21 @@ const mongoose = require("mongoose");
 const ObjectId = mongoose.Types.ObjectId;
 
 
-require("dotenv").config();
+require("dotenv").config({ path: '../.env' });
 const client = new MongoClient(process.env.MONGO_URL);
-// const hfToken = process.env.HF_TOKEN;
-// const embeddingUrl = process.env.EMBEDDING_URL;
-// const genAI = new GoogleGenerativeAI(process.env.GOOGLE_API_KEY);
-const genAI = new GoogleGenerativeAI("AIzaSyDe - o_KL1umfUHv31Ol2VPWI6iy7AfF3aM");
+
+console.log(process.env.AZURE_OPENAI_API_KEY)
+console.log(process.env.GOOGLE_API_KEY)
+console.log(process.env.JWT_SECRET_KEY)
+console.log(process.env.URL)
+
+const genAI = new GoogleGenerativeAI(process.env.GOOGLE_API_KEY);
 const model = genAI.getGenerativeModel({ model: "gemini-1.5-flash" });
 
-const AZURE_OPENAI_API_KEY = "fa57c768e4a8407f9c87017e0360a98a"
+const AZURE_OPENAI_API_KEY = process.env.AZURE_OPENAI_API_KEY
 const AZURE_OPENAI_ENDPOINT = "https://foxaiproject.openai.azure.com/"
 const AZURE_DEPLOYMENT_ID = "text-embedding-ada-002"
-const URL = "https://foxaiproject.openai.azure.com/openai/deployments/text-embedding-ada-002/embeddings?api-version=2023-05-15"
-
+const URL = process.env.URL
 
 async function generateEmbedding(text) {
     try {

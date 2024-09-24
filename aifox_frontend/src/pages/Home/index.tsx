@@ -11,6 +11,7 @@ const Home = () => {
     const [isAdmin, setIsAdmin] = useState<boolean>(false);
     const navigate = useNavigate();
     const dispatch = useDispatch();
+    const [isDeleting, setIsDeleting] = useState<boolean>(false);
 
     useEffect(() => {
         console.log(department);
@@ -57,13 +58,20 @@ const Home = () => {
     }, []);
 
     const handleDeleteDocument = async (document_id: Number, token: any) => {
+        const isConfirm = window.confirm("Do you want to delete this pdf ?");
         setCount(count + 1);
-        await deleteDocument(document_id, token);
+        setIsDeleting(true);
+        if (isConfirm) {
+            await deleteDocument(document_id, token);
+            setTableData();
+        }
+
     }
 
-    const handleOpenChatBox = (item_id: any, item_name: any) => {
+    const handleOpenChatBox = (item_id: any, document_name: any) => {
         navigate(`/foxai/${item_id}`);
-        dispatch(setUserDepartment(item_name));
+        sessionStorage.setItem("document_name", document_name);
+
     }
 
     return <div className='wraper-container'>

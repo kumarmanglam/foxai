@@ -12,13 +12,27 @@
     display: flex;
     justify-content: center;
     width: 100%;
-    height: calc(100vh - 151px);
+    height: calc(100vh - 176px);
     line-height: 24px;
     font-size: 16px;
     letter-spacing: normal;
     color: #0d0d0d;
     font-family: sans-serif;
     overflow-y: scroll;
+}
+
+.chat-heading {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    gap: 50px;
+}
+
+.deleteBtn {
+    padding: 5px;
+    border-radius: 10px;
+    border: none;
+    cursor: pointer;
 }
 
 .chat-input-prompt-box {
@@ -113,4 +127,9 @@
     width: 20px;
     height: 20px;
     cursor: pointer;
+}
+
+.loading-icon {
+    /* border: 1px solid red; */
+    height: 60px;
 }
