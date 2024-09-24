@@ -3,9 +3,7 @@ const JWT = require("jsonwebtoken")
 const Person = require("../models/userModel.js")
 const { comparePassword, hashPassword } = require("../helpers/authHelper.js")
 
-
 //login
-
 const loginController = async (req, res) => {
   try {
     const { email_id, password } = req.body;
@@ -75,8 +73,6 @@ const loginController = async (req, res) => {
 //add user
 
 const addUserController = async (req, res) => {
-
-
   try {
     const { name, email_id, password, department, role, phone_number } = req.body;
     const hashedPassword = await hashPassword(password);
@@ -88,11 +84,12 @@ const addUserController = async (req, res) => {
       department,
       role, phone_number
     });
-    console.log(newPerson)
+    // console.log(newPerson)
     const response = await newPerson.save();
     console.log("data saved");
     res.status(200).json({ response });
   } catch (err) {
+    console.log(err);
     res.status(500).json({ error: "internal server" });
   }
 }

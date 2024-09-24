@@ -1,26 +1,38 @@
-const axios = require('axios');
+import axios from "axios";
+import { userInterface } from "../pages/User/AddUser";
 
-export async function addUser() {
+export async function addUser(userData: userInterface, token: any) {
     const url = 'http://localhost:3000/auth/adduser';
-
-    const userData = {
-        name: "Kumar Manglam",
-        password: "password1234",
-        email_id: "kumarmanglamemail1@gmail.com",
-        department: "HR",
-        role: "user",
-        phone_number: 8448739538,
-    };
-
     try {
         const response = await axios.post(url, userData, {
             headers: {
                 'Content-Type': 'application/json',
+                'Authorization': `Bearer ${token}`
             },
         });
         console.log('User added successfully:', response.data);
     } catch (error) {
-        console.error('Error adding user:', error.response ? error.response.data : error.message);
+        console.error('Error adding user:');
     }
 }
+
+
+
+// Function to get all users
+export async function getAllUsers(token: any) {
+    try {
+        const response = await axios.get('http://localhost:3000/auth/getAllUser', {
+            headers: {
+                'Authorization': `Bearer ${token}`
+            }
+        });
+
+        return response.data; // Return the user data
+    } catch (error) {
+        console.log("error: ", error)
+    }
+}
+
+
+
 

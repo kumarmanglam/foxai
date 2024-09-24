@@ -70,6 +70,7 @@ const Home = () => {
         {isAdmin ? <div className='btn-container'>
             <button className='btns' onClick={handleAddUser}>Add User</button>
             <button className='btns' onClick={handleUploadDoc}>Upload Doc</button>
+            <button className='btns' onClick={() => navigate('/usersList')}>All Users</button>
         </div> : null}
         <div className='table-container'>
             <table className='table'>
@@ -82,7 +83,6 @@ const Home = () => {
                 </thead>
                 <tbody>
                     {data.map((item: any, index: number) => {
-
                         return <tr key={index}>
                             <td>{item.docs_name}</td>
                             <td>{item.department}</td>

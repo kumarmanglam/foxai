@@ -9,6 +9,7 @@ import AddUser from '../pages/User/AddUser';
 
 import Upload from '../pages/Upload';
 import UserDetails from '../pages/User/UserDetails';
+import AuthenticatedComponent from '../components/common/AuthenticatedComponent';
 
 
 const RouterContainer = () => {
@@ -16,14 +17,13 @@ const RouterContainer = () => {
         <Route path='/login' element={<Login />} />
 
         <Route path='/' element={<Layout />} >
-            <Route path='/home' element={<Home />} />
-            <Route path='/addUser' element={<AddUser />} />
-            <Route path='/userDetails' element={<UserDetails />} />
-            {/* <Route path='/user' element={<UserHome />} /> */}
-            <Route path='/upload' element={<Upload />} />
-            <Route path='/usersList' element={<UsersList />} />
-            <Route path='/foxai' element={<ChatContainer />} />
-            <Route path='/foxai/:document_id' element={<ChatContainer />} />
+            <Route path='/home' element={<AuthenticatedComponent><Home /></AuthenticatedComponent>} />
+            <Route path='/addUser' element={<AuthenticatedComponent><AddUser /></AuthenticatedComponent>} />
+            <Route path='/userDetails' element={<AuthenticatedComponent><UserDetails /></AuthenticatedComponent>} />
+            <Route path='/upload' element={<AuthenticatedComponent><Upload /></AuthenticatedComponent>} />
+            <Route path='/usersList' element={<AuthenticatedComponent><UsersList /></AuthenticatedComponent>} />
+            <Route path='/foxai' element={<AuthenticatedComponent><ChatContainer /></AuthenticatedComponent>} />
+            <Route path='/foxai/:document_id' element={<AuthenticatedComponent><ChatContainer /></AuthenticatedComponent>} />
         </Route>
     </Routes>)
 
