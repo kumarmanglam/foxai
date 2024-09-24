@@ -7,8 +7,8 @@ interface AuthenticatedComponentProp {
     children: any;
 }
 const AuthenticatedComponent: React.FC<AuthenticatedComponentProp> = ({ children }) => {
-    const isAuthenticated = useSelector(selectIsUserLoggedIn);
-    if (isAuthenticated) {
+    const token = sessionStorage.getItem("token");
+    if (token) {
         return children;
     }
     return (

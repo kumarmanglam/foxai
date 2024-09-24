@@ -59,7 +59,7 @@ const showChatHistory = async (req, res) => {
     const chatHistory = await Chats.findOne({ user_id: userId, pdf_id: pdfId });
 
     if (!chatHistory) {
-      return res.status(200).send('No chat history found for the specified user and PDF.');
+      return res.status(200).send([]);
     }
 
     res.json(chatHistory.chat_history);

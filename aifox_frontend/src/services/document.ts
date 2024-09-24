@@ -3,7 +3,7 @@ import axios from "axios";
 export async function getAllDocs() {
     try {
         const response = await axios.get('http://localhost:3000/documents/getAllDocs');
-        console.log(response.data);
+        // console.log(response.data);
         return response.data;
 
     } catch (error) {

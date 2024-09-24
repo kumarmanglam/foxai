@@ -3,7 +3,7 @@ import "./style.css"
 import fox from "../../assets/icons/fox.png"
 import { useDispatch, useSelector } from 'react-redux'
 import { selectIsUserLoggedIn } from '../../store/selectors/userSelector'
-import { setIsUserLoggedIn, setUserDepartment, setUserEmail } from '../../store/reducers/userSlice'
+import { setIsUserLoggedIn, setUserDepartment, setUserEmail, setUserId } from '../../store/reducers/userSlice'
 import { useNavigate } from 'react-router-dom'
 import Navbar from '../../components/common/Navbar'
 import { set } from 'mongoose'
@@ -18,6 +18,7 @@ const Login = () => {
     const navigate = useNavigate();
     const btnRef = useRef<HTMLButtonElement>(null);
     const [isLogButtonActive, setIsLogButtonActive] = useState<boolean>(false);
+    const [error, setError] = useState<string>(""); // Error state
 
     const [loginForm, SetLoginForm] = useState<loginForm>({
         email: "",
@@ -26,7 +27,8 @@ const Login = () => {
 
     useEffect(() => {
         const { email, password } = loginForm;
-        setIsLogButtonActive(email.trim() !== "" && password.trim() !== "");
+        setIsLogButtonActive(email.trim() !== "" && password.length >= 8);
+
     }, [loginForm]);
 
 
@@ -38,6 +40,7 @@ const Login = () => {
 
     const handleSubmit = async (event: any) => {
         event.preventDefault();
+        setError("");
         // console.log(loginForm.email);
         // console.log(loginForm.password);
 
@@ -45,9 +48,13 @@ const Login = () => {
         try {
             const response = await callLoginAPI(loginForm.email, loginForm.password);
             console.log(response.user)
+            dispatch(setUserId(response.user._id));
             dispatch(setIsUserLoggedIn(true));
             dispatch(setUserEmail(loginForm.email));
+
             sessionStorage.setItem("department", response.user.department);
+            sessionStorage.setItem("user", JSON.stringify(response.user));
+
             // dispatch(setUserDepartment(sessionStorage.getItem("department")));
             navigate("/home")
 
@@ -57,7 +64,7 @@ const Login = () => {
 
         } catch (err) {
             dispatch(setIsUserLoggedIn(false));
-
+            alert("Invalid credentials, please try again.");
         }
 
     }
@@ -66,7 +73,8 @@ const Login = () => {
         navigate("/admin");
     }
 
-    // const isUserLoggedIn = useSelector(selectIsUserLoggedIn);
+    const isUserLoggedIn = useSelector(selectIsUserLoggedIn);
+
 
     return (
 
@@ -91,9 +99,6 @@ const Login = () => {
                         <div className='fields'>
                             <label className='field-labels'>Password</label><br />
                             <input id="input" type='password' name='password' required value={loginForm?.password} onChange={(e) => SetLoginForm({ ...loginForm, password: e?.currentTarget?.value })} />
-                        </div>
-                        <div id="forgotpwd">
-                            <h6>Forgot password?</h6>
                         </div>
 
                         <div className="login-submit">

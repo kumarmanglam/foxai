@@ -2,6 +2,8 @@
 const JWT = require("jsonwebtoken")
 const Person = require("../models/userModel.js")
 
+require("dotenv").config({ path: '../.env' });
+
 // Protected routes, token-based
 const requireSignIn = async (req, res, next) => {
 
@@ -12,7 +14,7 @@ const requireSignIn = async (req, res, next) => {
   if (!token) return res.status(401).json({ error: "unauthorized" });
   try {
 
-    const decoded = JWT.verify(token, "foxai");
+    const decoded = JWT.verify(token, process.env.JWT_SECRET_KEY);
 
     const user = await Person.findOne({ email_id: decoded.email });
 
@@ -29,7 +31,7 @@ const requireSignIn = async (req, res, next) => {
 const isAdmin = async (req, res, next) => {
   try {
     console.log(req.user);
-    const user = await Person.findOne({ email_id: req.user.email });
+    const user = await Person.findOne({ email_id: req.user.email_id });
     if (!user) {
       return res.status(404).json({
         success: false,

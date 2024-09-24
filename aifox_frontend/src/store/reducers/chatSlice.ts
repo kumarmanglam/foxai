@@ -16,6 +16,6 @@ const ChatSlice = createSlice({
     }
 })
 
-export const { setChatHistory } = ChatSlice.actions;
+export const { setChatHistory, } = ChatSlice.actions;
 
 export default ChatSlice.reducer;
