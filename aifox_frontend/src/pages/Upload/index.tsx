@@ -4,6 +4,7 @@ import { useNavigate } from 'react-router-dom';
 import axios from 'axios';
 import { toast, ToastContainer } from 'react-toastify';
 import 'react-toastify/dist/ReactToastify.css';
+import { uploadDocs } from '../../services/document';
 
 const Upload = () => {
 
@@ -43,15 +44,12 @@ const Upload = () => {
                 formData.append('department', department);
                 console.log(department)
 
-                const response = await axios.post('http://localhost:3000/documents/uploadDocs', formData, {
-                    headers: {
-                        'Content-Type': 'multipart/form-data',
-                    },
-                });
+                const response = await uploadDocs(formData);
 
                 setIsLoading(true);
                 // let response = { data: "adsfasd" };
                 console.log("response.data...", response.data);
+
                 toast('📄 Document uploaded successfully!', {
                     position: "top-right",
                     autoClose: 2000,
@@ -70,6 +68,7 @@ const Upload = () => {
                     closeOnClick: true,
                     theme: "light",
                 });
+                setIsLoading(false);
             }
         } else {
             toast('❌ Please select a valid PDF file!', {
@@ -78,6 +77,7 @@ const Upload = () => {
                 closeOnClick: true,
                 theme: "light",
             });
+
         }
     }
 

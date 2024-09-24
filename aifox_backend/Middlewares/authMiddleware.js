@@ -26,7 +26,7 @@ const requireSignIn = async (req, res, next) => {
 // Middleware for admin access
 const isAdmin = async (req, res, next) => {
   try {
-
+    console.log(req.user);
     const user = await Person.findOne({ email_id: req.user.email });
     if (!user) {
       return res.status(404).json({

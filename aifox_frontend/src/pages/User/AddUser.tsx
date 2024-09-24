@@ -44,8 +44,8 @@ const AddUser = () => {
             return "Invalid email address.";
         }
 
-        // Check if the department is valid (you can expand this if you have specific departments)
         const validDepartments = ["HR", "IT", "Finance", "Sales"];
+        console.log(userData.department);
         if (!validDepartments.includes(userData.department)) {
             return "Invalid department.";
         }
@@ -119,10 +119,10 @@ const AddUser = () => {
                         ...prevData,
                         department: e.target.value
                     }))}>
-                        <option value="hr">Human Resources</option>
-                        <option value="finance">Finance</option>
-                        <option value="it">Information Technology</option>
-                        <option value="marketing">Marketing</option>
+                        <option value="HR">Human Resources</option>
+                        <option value="Finance">Finance</option>
+                        <option value="IT">Information Technology</option>
+                        <option value="Marketing">Marketing</option>
                     </select>
                 </div>
                 <div className='formElements'>
