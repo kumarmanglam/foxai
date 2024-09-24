@@ -83,7 +83,6 @@ const addUserController = async (req, res) => {
       password: hashedPassword,
       email_id,
       department,
-
       role,
       phone_number
 

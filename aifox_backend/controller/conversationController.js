@@ -30,11 +30,18 @@ const conversation = async (req, res) => {
     }
 
     const historyContext = chatHistory.chat_history.map(entry => `Human: ${entry.human}\nAI: ${entry.ai}`).join('\n');
-    const answer = await retrieveAnswer(query, historyContext, pdfId);
+
+    const answer = await retrieveAnswer(query, [historyContext], pdfId, req.user._id);
+
     chatHistory.chat_history.push({ human: query, ai: answer });
     await chatHistory.save();
 
-    res.json({ answer });
+    const resp = {
+      answer,
+      chatHistory: chatHistory.chat_history
+    }
+
+    res.json(resp);
   } catch (error) {
     console.error(`Error during conversation: ${error.message}`);
     res.status(500).send('An error occurred during the conversation.');
@@ -52,7 +59,7 @@ const showChatHistory = async (req, res) => {
     const chatHistory = await Chats.findOne({ user_id: userId, pdf_id: pdfId });
 
     if (!chatHistory) {
-      return res.status(404).send('No chat history found for the specified user and PDF.');
+      return res.status(200).send('No chat history found for the specified user and PDF.');
     }
 
     res.json(chatHistory.chat_history);
@@ -73,7 +80,7 @@ const deleteChatHistory = async (req, res) => {
     const result = await Chats.findOneAndDelete({ user_id: userId, pdf_id: pdfId });
 
     if (!result) {
-      return res.status(404).send('No chat history found for the specified user and PDF.');
+      return res.status(200).send('No chat history found for the specified user and PDF.');
     }
 
     res.send('Chat history successfully deleted.');

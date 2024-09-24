@@ -14,7 +14,9 @@ const requireSignIn = async (req, res, next) => {
 
     const decoded = JWT.verify(token, "foxai");
 
-    req.user = decoded;
+    const user = await Person.findOne({ email_id: decoded.email });
+
+    req.user = user;
 
     next();
   } catch (err) {

@@ -1,4 +1,4 @@
-
+const Chats = require('../models/chatModel');
 const { MongoClient } = require('mongodb');
 const { GoogleGenerativeAI } = require("@google/generative-ai");
 const axios = require("axios");
@@ -85,11 +85,9 @@ async function searchWithEmbedding(embedding, pdf_id) {
     }
 }
 
-async function generateAnswer(query, context) {
+async function generateAnswer(context) {
     try {
-        let prompt = `Answer the following question strictly based on the given context... \n${context.join('\n')}\nQuestion: ${query}\nAnswer:`;
-
-        const result = await model.generateContent(prompt);
+        const result = await model.generateContent(context);
         return result.response.text();
     } catch (error) {
         console.error(`Error generating answer with Gemini Flash: ${error.message}`);
@@ -97,12 +95,15 @@ async function generateAnswer(query, context) {
     }
 }
 
-async function retrieveAnswer(query, history, pdf_id) {
+async function retrieveAnswer(query, history, pdf_id, user_id) {
+    console.log({ history })
     try {
         const queryEmbedding = await generateEmbedding(query);
 
         const searchResults = await searchWithEmbedding(queryEmbedding, pdf_id);
-        const context = searchResults.map(result => result.text);
+        console.log({ searchResults });
+        const context = searchResults.map(result => JSON.stringify(result.text));
+        console.log({ context: context.join("\n") })
 
         let historyContext = '';
         if (history && history.length > 0) {
@@ -111,12 +112,16 @@ async function retrieveAnswer(query, history, pdf_id) {
             });
         }
 
-        let fullContext = `Here is some context:\n${context.join('\n')}\n${historyContext}Question: ${query}\nAnswer:`;
+        let fullContext = `Answer the following question strictly based on the given context...:\n${context.join('\n')}\n This is Chat History uptil now. ${historyContext}Question: ${query}\nAnswer:`;
 
         if (context.length > 0 || historyContext) {
-            const answer = await generateAnswer(query, fullContext);
+            const answer = await generateAnswer(fullContext);
+            console.log({
+                user_id, pdf_id
+            })
 
-            return answer;
+            const resp = answer;
+            return resp;
         } else {
             return "No relevant documents found.";
         }
