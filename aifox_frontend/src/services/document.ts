@@ -12,6 +12,19 @@ export async function getAllDocs() {
 }
 
 
+export async function uploadDocs(formData: any) {
+    try {
+        const response = await axios.post('http://localhost:3000/documents/uploadDocs', formData, {
+            headers: {
+                'Content-Type': 'multipart/form-data',
+            },
+        });
+        return response.data;
+    } catch (error) {
+        console.log("Error in uploading document ", error);
+    }
+}
+
 export async function getDocsByDept(department: string) {
     try {
         const response = await axios.get('http://localhost:3000/documents/getDocsByDept', {

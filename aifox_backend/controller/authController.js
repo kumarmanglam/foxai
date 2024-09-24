@@ -87,7 +87,12 @@ const addUserController = async (req, res) => {
       phone_number
 
     });
-    // console.log(newPerson)
+
+    const result = await Person.find({ email_id });
+    if (result.length > 0) {
+      res.status(500).json({ error: "user email already registered" });
+    }
+
     const response = await newPerson.save();
     console.log("data saved");
     res.status(200).json({ response });

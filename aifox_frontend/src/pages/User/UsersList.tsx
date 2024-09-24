@@ -1,7 +1,9 @@
 import React, { useEffect, useState } from 'react'
 import { getAllUsers } from '../../services/user';
+import { useNavigate } from 'react-router-dom';
 
 const UsersList = () => {
+    const navigate = useNavigate();
     const [users, setUsers] = useState<any>([]);
     const token = sessionStorage.getItem("token");
     const getAllUsersData = async () => {
@@ -9,6 +11,9 @@ const UsersList = () => {
         console.log(response.users);
         setUsers(response.users);
     }
+    const handleAddUser = () => {
+        navigate('/addUser');
+    };
 
     useEffect(() => {
 
@@ -22,6 +27,7 @@ const UsersList = () => {
 
         </div>
         <div className='table-container'>
+            <button className='btns' onClick={handleAddUser}>Add User</button>
             <table className='table'>
                 <thead>
                     <tr>
